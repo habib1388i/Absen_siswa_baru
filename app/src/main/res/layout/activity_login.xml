@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.LoginActivity"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="30dp">
+
+    <EditText
+        android:id="@+id/edt_email_login"
+        android:hint="Masukan email "
+        android:drawableRight="@drawable/ic_email_black_24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edt_pass_login"
+        android:inputType="textPassword"
+        android:hint="Masukan Sandi "
+        android:drawableRight="@drawable/ic_vpn_key_black_24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="Login"
+        android:id="@+id/btn_login"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:text="register!!"
+        android:id="@+id/btn_register"
+        android:layout_marginTop="15dp"
+        android:background="#00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:onClick="goRegister"/>
+
+
+</LinearLayout>
