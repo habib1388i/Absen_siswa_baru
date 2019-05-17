@@ -1,7 +1,7 @@
 package com.ziyata.absen.ui.login;
 
-import com.ziyata.absen.data.remote.ApiLoginClient;
-import com.ziyata.absen.data.remote.ApiLoginInterface;
+import com.ziyata.absen.data.remote.ApiClient;
+import com.ziyata.absen.data.remote.ApiInterface;
 import com.ziyata.absen.model.login.LoginResponse;
 
 import retrofit2.Call;
@@ -10,7 +10,7 @@ import retrofit2.Response;
 
 public class LoginPresenter implements LoginContract.Presenter {
     LoginContract.View view;
-    ApiLoginInterface apiLoginInterface = ApiLoginClient.getClient().create(ApiLoginInterface.class);
+    ApiInterface apiLoginInterface = ApiClient.getClient().create(ApiInterface.class);
 
     public LoginPresenter(LoginContract.View view) {
         this.view = view;
@@ -32,7 +32,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         loginResponseCall.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                view.onSukses("Data Berhasil di Tambahkan .. ", response.body());
+                view.onSukses("DaBerhasil di Tambahkan .. ", response.body());
             }
 
             @Override

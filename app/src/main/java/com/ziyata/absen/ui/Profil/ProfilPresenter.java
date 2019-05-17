@@ -33,6 +33,7 @@ public class ProfilPresenter implements ProfilContract.Presenter {
         // Membuat object call dan memanggil method updateUser serta mengirimkan datanya
         Call<LoginResponse> call = apiInterface.updateUser(Integer.valueOf(
                 loginData.getId_user()),
+                Integer.valueOf(loginData.getIdKelas()),
                 loginData.getNamaSiswa(),
                 loginData.getAlamat(),
                 loginData.getJenkel(),

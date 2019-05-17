@@ -8,6 +8,12 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public interface ApiInterface {
+
+    @FormUrlEncoded
+    @POST("login_user.php")
+    Call<LoginResponse> loginUser(@Field("email") String email,
+                                  @Field("password")String password);
+
     @FormUrlEncoded
     @POST("registeruser.php")
     Call<LoginResponse> registerUser(
@@ -24,7 +30,9 @@ public interface ApiInterface {
     @POST("updateuser.php")
     Call<LoginResponse> updateUser(
             @Field("iduser") int iduser,
-            @Field("namauser") String namauser,
+            @Field("idkelas") int idkelas,
+            @Field("namasiswa") String namasiswa
+            ,
             @Field("alamat") String alamat,
             @Field("jenkel") String jenkel,
             @Field("notelp") String notelp

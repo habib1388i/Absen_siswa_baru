@@ -18,12 +18,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ziyata.absen.R;
@@ -63,9 +65,9 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
     CardView layoutJenkel;
     Unbinder unbinder;
 
-    private ProfilPresenter mProfilPresenter = new ProfilPresenter(this);
+    private ProfilPresenter mProfilpresenter = new ProfilPresenter(this);
 
-    private String idUser, nama, alamat, noTelp;
+    private String idSiswa, nama, alamat, notelp;
     private int gender;
     private Menu action;
 
@@ -75,29 +77,31 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
     private ProgressDialog progressDialog;
 
 
-
     public ProfilFragment() {
+        // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profil, container, false);
         unbinder = ButterKnife.bind(this, view);
-        return view;
-        spinerSetting();
-        mProfilPresenter.getDataUser(getContext());
+        setupSpiner();
+        mProfilpresenter.getDataUser(getContext());
         setHasOptionsMenu(true);
+        return view;
     }
 
-    private void spinerSetting() {
-        ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.array_gender_options, android.R.layout.simple_spinner_item);
+    private void setupSpiner() {
+        final ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(getContext(), R.array.array_gender_options, android.R.layout.simple_spinner_item);
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinGender.setAdapter(genderSpinnerAdapter);
         spinGender.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selection = (String) adapterView.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String selection = (String) adapterView.getItemAtPosition(5);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.gender_male))) {
                         mGender = "L";
@@ -106,20 +110,15 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
                     }
                 }
             }
+
         });
     }
 
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
     public void showProgress() {
         progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Saving . . .");
+        progressDialog.setMessage("saving...");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -132,35 +131,32 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
     @Override
     public void showSuccessUpdate(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        // Mengambil data ulang
-        mProfilPresenter.getDataUser(getContext());
+        mProfilpresenter.getDataUser(getContext());
+
     }
 
     @Override
     public void showDataUser(LoginData loginData) {
-        readMode();
-
-        idUser = loginData.getId_user();
+        idSiswa = loginData.getId_user();
         nama = loginData.getNamaSiswa();
         alamat = loginData.getAlamat();
-        noTelp = loginData.getNoTelp();
+        notelp = loginData.getNoTelp();
         if (loginData.getJenkel().equals("L")) {
             gender = 1;
         } else {
             gender = 2;
         }
-
-        if (!TextUtils.isEmpty(idUser)) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profil" +  nama);
-
+        if (!TextUtils.isEmpty(idSiswa)) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profil" + nama);
             edtNama.setText(nama);
             edtAlamat.setText(alamat);
-            edtNotelp.setText(noTelp);
+            edtNotelp.setText(notelp);
             switch (gender) {
                 case GENDER_MALE:
                     Log.i("cek male", String.valueOf(gender));
                     spinGender.setSelection(0);
                     break;
+
                 case GENDER_FEMALE:
                     spinGender.setSelection(1);
                     break;
@@ -168,7 +164,6 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
         } else {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profil");
         }
-
     }
 
     @Override
@@ -179,7 +174,7 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
 
     @OnClick(R.id.btn_logout)
     public void onViewClicked() {
-        mProfilPresenter.logoutSession(getContext());
+        mProfilpresenter.logoutSession(getContext());
         getActivity().finish();
     }
 
@@ -195,76 +190,66 @@ public class ProfilFragment extends Fragment implements ProfilContract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_edit:
-
                 editMode();
                 action.findItem(R.id.menu_edit).setVisible(false);
                 action.findItem(R.id.menu_save).setVisible(true);
-
                 return true;
             case R.id.menu_save:
-                if (!TextUtils.isEmpty(idUser)) {
+                if (!TextUtils.isEmpty(idSiswa)) {
                     if (TextUtils.isEmpty(edtNama.getText().toString()) ||
                             TextUtils.isEmpty(edtAlamat.getText().toString()) ||
                             TextUtils.isEmpty(edtNotelp.getText().toString())) {
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                        alertDialog.setMessage("Please complete the field!");
-                        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        AlertDialog.Builder alertdialog = new AlertDialog.Builder(getContext());
+                        alertdialog.setMessage("please compalate the field!");
+                        alertdialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         });
-                        alertDialog.show();
-
+                        alertdialog.show();
                     } else {
                         LoginData loginData = new LoginData();
-                        loginData.setId_user(idUser);
+                        loginData.setId_user(idSiswa);
                         loginData.setNamaSiswa(edtNama.getText().toString());
                         loginData.setAlamat(edtAlamat.getText().toString());
                         loginData.setNoTelp(edtNotelp.getText().toString());
                         loginData.setJenkel(mGender);
-
-                        mProfilPresenter.updateDataUser(getContext(), loginData);
-
+                        mProfilpresenter.updateDataUser(getContext(), loginData);
                         readMode();
                         action.findItem(R.id.menu_edit).setVisible(true);
                         action.findItem(R.id.menu_save).setVisible(false);
                     }
-                } else {
+                }else {
                     readMode();
                     action.findItem(R.id.menu_edit).setVisible(true);
                     action.findItem(R.id.menu_save).setVisible(false);
                 }
-
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                default:
+                    return super.onOptionsItemSelected(item);
+
         }
     }
-
     @SuppressLint("RestrictedApi")
-    private void editMode() {
+    private void readMode() {
         edtNama.setFocusableInTouchMode(true);
         edtAlamat.setFocusableInTouchMode(true);
         edtNotelp.setFocusableInTouchMode(true);
-
-
         spinGender.setEnabled(true);
         fabChoosePic.setVisibility(View.INVISIBLE);
     }
 
     @SuppressLint("RestrictedApi")
-    private void readMode() {
-
-        edtNama.setFocusableInTouchMode(false);
-        edtNotelp.setFocusableInTouchMode(false);
-        edtAlamat.setFocusableInTouchMode(false);
+    private void editMode() {
+        edtNama.setFocusableInTouchMode(true);
+        edtNotelp.setFocusableInTouchMode(true);
+        edtAlamat.setFocusableInTouchMode(true);
         edtNama.setFocusable(false);
-        edtAlamat.setFocusable(false);
-        edtNotelp.setFocusable(false);
-
-        spinGender.setEnabled(false);
+        edtNama.setFocusable(false);
+        edtNama.setFocusable(false);
+        spinGender.setEnabled(true);
         fabChoosePic.setVisibility(View.INVISIBLE);
-    }
-    }
 
+    }
+}

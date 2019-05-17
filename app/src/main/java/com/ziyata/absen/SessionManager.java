@@ -27,6 +27,7 @@ public class SessionManager {
         // Memasukkan data user yang sudah login ke dalam SharedPreference
         editor.putBoolean(Constant.KEY_IS_LOGIN, true);
         editor.putString(Constant.KEY_USER_ID, loginData.getId_user());
+        editor.putString(Constant.KEY_ID_KELAS, loginData.getIdKelas());
         editor.putString(Constant.KEY_USER_NAMA, loginData.getNamaSiswa());
         editor.putString(Constant.KEY_USER_ALAMAT, loginData.getAlamat());
         editor.putString(Constant.KEY_USER_JENKEL, loginData.getJenkel());
